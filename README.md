@@ -1,52 +1,80 @@
-## 简介
+# vue-admin-template
 
-more than blog
+> A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
 
-## 开发
+**Live demo:** http://panjiachen.github.io/vue-admin-template
+
+[中文文档](https://github.com/PanJiaChen/vue-admin-template/blob/master/README-zh.md)
+
+## Build Setup
 
 ```bash
-# 克隆项目
-git clone https://github.com/michealiker/blog.git
+# Clone project
+git clone https://github.com/PanJiaChen/vue-admin-template.git
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 建议不要用 cnpm 安装 会有各种诡异的bug 可以通过如下操作解决 npm 下载速度慢的问题
-npm install --registry=https://registry.npm.taobao.org
-
-# 启动服务
+# Serve with hot reload at localhost:9528
 npm run dev
+
+# Build for production with minification
+npm run build
+
+# Build for production and view the bundle analyzer report
+npm run build --report
 ```
 
-浏览器访问 http://localhost:9527
+## Demo
 
-## 发布
+![demo](https://github.com/PanJiaChen/PanJiaChen.github.io/blob/master/images/demo.gif)
 
-```bash
-# 构建测试环境
-npm run build:sit
+## Extra
 
-# 构建生产环境
-npm run build:prod
+If you want router permission && generate menu by user roles , you can use this branch [permission-control](https://github.com/PanJiaChen/vue-admin-template/tree/permission-control)
+
+This project is based on `webpack4` development. If you want to use `webpack3` development, please use this branch [webpack3](https://github.com/PanJiaChen/vue-admin-template/tree/webpack3)
+
+For `typescript` version, you can use [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template) (Credits: [@Armour](https://github.com/Armour))
+
+## Related Project
+
+[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
+
+[electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
+
+[vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
+
+### Element-Ui using cdn tutorial
+
+First find `index.html`([root directory](https://github.com/PanJiaChen/vue-admin-template/blob/element-ui-cdn/index.html))
+
+Import css and js of `Element`, and then import vue. Because `Element` is vue-dependent, vue must be import before it.
+
+Then find [webpack.base.conf.js](https://github.com/PanJiaChen/vue-admin-template/blob/element-ui-cdn/build/webpack.base.conf.js)
+Add `externals` to make webpack not package vue and element.
+
+```
+externals: {
+  vue: 'Vue',
+  'element-ui':'ELEMENT'
+}
 ```
 
-## 其它
+Finally there is a small detail to pay attention to that if you import vue in global, you don't need to manually `Vue.use(Vuex)`, it will be automatically mounted, see
+[issue](https://github.com/vuejs/vuex/issues/731)
 
-```bash
-# --report to build with bundle size analytics
-npm run build:prod
+And you can use `npm run build --report` to see the effect
 
-# --generate a bundle size analytics. default: bundle-report.html
-npm run build:prod --generate_report
+Pictured:
+![demo](https://panjiachen.github.io/images/element-cdn.png)
 
-# --preview to start a server in local to preview
-npm run build:prod --preview
+**[Detailed code](https://github.com/PanJiaChen/vue-admin-template/commit/746aff560932704ae821f82f10b8b2a9681d5177)**
 
-# lint code
-npm run lint
+**[Branch](https://github.com/PanJiaChen/vue-admin-template/tree/element-ui-cdn)**
 
-# auto fix
-npm run lint -- --fix
-```
+## License
 
-Copyright (c) 2018-present XieQiang
+[MIT](https://github.com/PanJiaChen/vue-admin-template/blob/master/LICENSE) license.
+
+Copyright (c) 2017-present PanJiaChen

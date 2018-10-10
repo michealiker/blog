@@ -1,85 +1,87 @@
 <template>
-  <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name"/>
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai"/>
-          <el-option label="Zone two" value="beijing"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;"/>
-        </el-col>
-        <el-col :span="2" class="line">-</el-col>
-        <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;"/>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery"/>
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type"/>
-          <el-checkbox label="Promotion activities" name="type"/>
-          <el-checkbox label="Offline activities" name="type"/>
-          <el-checkbox label="Simple brand exposure" name="type"/>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor"/>
-          <el-radio label="Venue"/>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input v-model="form.desc" type="textarea"/>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
-    </el-form>
+  <div>
+    <el-row class="warp">
+      <el-col :span="24" class="warp-main">
+        <el-form ref="infoForm" :model="infoForm" :rules="rules" label-width="120px">
+          <el-form-item label="标题" prop="a_title">
+            <el-input v-model="infoForm.a_title"></el-input>
+          </el-form-item>
+          <el-form-item label="来源" prop="a_source">
+            <el-input v-model="infoForm.a_source"></el-input>
+          </el-form-item>
+          <el-form-item label="详细">
+            <div class="edit_container">
+              <quill-editor v-model="infoForm.a_content"
+                            ref="myQuillEditor"
+                            class="editer"
+                            :options="editorOption" @ready="onEditorReady($event)">
+              </quill-editor>
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">确认提交</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+  import { quillEditor } from 'vue-quill-editor'
+  export default {
+    data() {
+      return {
+        infoForm: {
+          a_title: '',
+          a_source: '',
+          a_content:'',
+          editorOption: {}
+        },
+        rules: {
+          a_title: [
+            {required: true, message: '请输入标题', trigger: 'blur'}
+          ],
+          a_content: [
+            {required: true, message: '请输入详细内容', trigger: 'blur'}
+          ]
+        },
       }
-    }
-  },
-  methods: {
-    onSubmit() {
-      this.$message('submit!')
     },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
+    computed: {
+      editor() {
+        return this.$refs.myQuillEditor.quill
+      }
+    },
+    mounted() {
+
+    },
+    methods: {
+      onEditorReady(editor) {
+      },
+      onSubmit() {
+        this.$refs.infoForm.validate((valid) => {
+          if(valid) {
+            this.$post('m/add/about/us',this.infoForm).then(res => {
+              if(res.errCode == 200) {
+                this.$message({
+                  message: res.errMsg,
+                  type: 'success'
+                });
+                this.$router.push('/aboutus/aboutlist');
+              } else {
+                this.$message({
+                  message: res.errMsg,
+                  type:'error'
+                });
+              }
+            });
+          }
+        });
+      }
+    },
+    components: {
+      quillEditor
     }
   }
-}
 </script>
-
-<style scoped>
-.line{
-  text-align: center;
-}
-</style>
-

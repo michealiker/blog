@@ -1,87 +1,34 @@
 <template>
-  <div>
-    <el-row class="warp">
-      <el-col :span="24" class="warp-main">
-        <el-form ref="infoForm" :model="infoForm" :rules="rules" label-width="120px">
-          <el-form-item label="标题" prop="a_title">
-            <el-input v-model="infoForm.a_title"></el-input>
-          </el-form-item>
-          <el-form-item label="来源" prop="a_source">
-            <el-input v-model="infoForm.a_source"></el-input>
-          </el-form-item>
-          <el-form-item label="详细">
-            <div class="edit_container">
-              <quill-editor v-model="infoForm.a_content"
-                            ref="myQuillEditor"
-                            class="editer"
-                            :options="editorOption" @ready="onEditorReady($event)">
-              </quill-editor>
-            </div>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">确认提交</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+  <div id="editor">
+    <mavon-editor style="height: 100%" @save="publish"/>
+    <button @click="publish">发布</button>
   </div>
 </template>
-
 <script>
-  import { quillEditor } from 'vue-quill-editor'
-  export default {
-    data() {
-      return {
-        infoForm: {
-          a_title: '',
-          a_source: '',
-          a_content:'',
-          editorOption: {}
-        },
-        rules: {
-          a_title: [
-            {required: true, message: '请输入标题', trigger: 'blur'}
-          ],
-          a_content: [
-            {required: true, message: '请输入详细内容', trigger: 'blur'}
-          ]
-        },
-      }
-    },
-    computed: {
-      editor() {
-        return this.$refs.myQuillEditor.quill
-      }
-    },
-    mounted() {
-
-    },
-    methods: {
-      onEditorReady(editor) {
-      },
-      onSubmit() {
-        this.$refs.infoForm.validate((valid) => {
-          if(valid) {
-            this.$post('m/add/about/us',this.infoForm).then(res => {
-              if(res.errCode == 200) {
-                this.$message({
-                  message: res.errMsg,
-                  type: 'success'
-                });
-                this.$router.push('/aboutus/aboutlist');
-              } else {
-                this.$message({
-                  message: res.errMsg,
-                  type:'error'
-                });
-              }
-            });
-          }
-        });
-      }
-    },
-    components: {
-      quillEditor
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+export default {
+  name: 'Editor',
+  components: {
+    mavonEditor
+  },
+  data() {
+    return {
+      htmlSting: ''
+    }
+  },
+  methods: {
+    publish(value, render) {
+      console.log(render)
     }
   }
+}
 </script>
+<style>
+  #editor {
+    margin: auto;
+    width: 90%;
+    /* height: 600px; */
+    margin-top: 20px;
+  }
+</style>
